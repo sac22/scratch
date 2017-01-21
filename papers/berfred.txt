@@ -1,0 +1,22 @@
+Personal opinions, not a critique.
+
+Notes from the paper `An Evening with Berferd In Which a Cracker is Lured,
+Endured, and Studied by Bill Cheswick
+
+Has the usual layout:
+
+Abstract
+Introduction
+...
+Conclusion
+Acknowledgment
+
+This is more like a blog. Has original work, but not very deep.
+Does not explain any concepts deeply. Explains some useful services and their
+vulnerabilities. Sysadmin best practices. Explains chroot is not perfectly
+secure, does not say why.
+
+Mentions about setting up jail (but very vague).
+
+Didn't have much take away from the paper.
+Could have been more deep.
