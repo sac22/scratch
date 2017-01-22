@@ -1,0 +1,60 @@
+Introduction to IRQs, DMAs, and Base addresses
+
+Agenda: Discuss the definitions and assignments of IRQs, DMAs, and Base
+addresses.
+
+IRQs - Interrupt Requests
+-------------------------
+
+IRQ is a "tap on the shoulder" to the CPU by a peripheral card plugged into an
+ISO slot to tell the CPU that the peripheral has something to say.
+
+The peripheral may be: An ethernet card (NIC), modem, sound card, SCSI adapter,
+                       HDD controller, COM port etc.
+
+
+There are typically 16 IRQs in a typical ISA bus PC.
+
+CONFLICT: If two devices share the same IRQ there will be a conflict. For
+          example NIC and Modem having IRQ5.
+
+If there is an IRQ conflict, system might hang or the peripherals might not
+function properly.
+
+
+
+DMA - Direct Memory Access
+--------------------------
+
+Allows channles to be opened by the peripheral to read/write directly to memory
+without going through the CPU.
+
+DMA channels: DMA0 - DMA7
+
+For example: DMA1 - Sound
+             DMA2 - FDD controller
+             DMA5 - Sound
+             DMA6 - SCSI
+
+BASE addresses
+--------------
+
+Are also called I/O ports, I/O addresses, I/O port addresses, and base ports.
+
+They are memory locations that provide an interface between the Operating System
+and the I/O device.
+
+The peripheral communicates with the operating system through the base
+addresses.
+
+Files on GNU/Linux
+------------------
+
+/proc/interrups
+/proc/ioports
+/proc/dma
+
+Summary
+
+Need more deep understanding of the kernel to understand these concepts more
+clearly.
