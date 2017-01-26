@@ -1,0 +1,5 @@
+This is a paper explaining the /proc filesystem on System V Release 4.
+
+Explains generic /proc structure, and other useful details.
+This is more of a writeup on /proc filesystem.
+

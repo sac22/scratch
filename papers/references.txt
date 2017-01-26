@@ -1,0 +1,16 @@
+/proc
+
+1. T. J. Killian, `Processes as Files', USENIX 1984
+2. R. A Gingell, J. P. Moran, W. A. Shannon `Virtual Memory Architecture in
+   SunOS', USENIX, 1987
+3. J. P. Moran, `SUNOS Virtual Memory Implementation' Eu Unix User's Group 1988.
+4. A. P. Rifkin, M. P. Forbes, R. L. Hamilton, M. Sabrio, S. Shah, K. Yuch
+   `Remote File Sharing Architectural Overview', USENIX 1986
+5. S. R. Kleiman, `Vnodes: An Architecture for Miltiple File System Types in Sun
+   Unix', USENIX 1986
+6. R. Pike, D. Presotto, K. Thompson, H. Trickey `Plan 9 from Bell Labs' UKUUG
+   Conference 1990.
+
+
+
+

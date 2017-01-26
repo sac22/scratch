@@ -1,0 +1,161 @@
+      The Process Filesystem and Process Model in Unix System V Release 4
+
+Abstract
+--------
+
+* Explains the /proc filesystem in Unix SVR4 and its relationship to Unix
+  process model abstraction
+
+* /proc was a debugger interface superseding ptrace(2) and evolved later on.
+
+* Processes can be stopped and started on events of interest:
+  a. Specific machine faults
+  b. Specific signals
+  c. Entry and exit from syscalls
+
+* read(2) and write(2) are preferred over ioctl(2), since it generalizes more
+  easily to networks.
+
+Introduction
+------------
+
+* /proc was done in Unix 8th edition.
+* SVR4 /proc is a refinement from a simple replacement for the ptrace(2) syscall
+  to a general interface to the Unix process model abstraction.
+
+* ls -l /proc
+  > Owner and group of file is the process's real UID and GID.
+  > Size is the virtual memory size of the process
+  > System processes have the size 0
+
+* Standard syscalls can be used to access the files:
+  eg: open(2), close(2), read(2), write(2), lseek(2), ioctl(2)
+
+* A process file contains data only at file offsets that match valid virtual
+  addresses in the process.
+  > I/O operation with a file offset in an unmapped area fails.
+  > I/O operations that extend into unmapped areas do not fail but gets
+  truncated at the boundary.
+
+* Information and control operations are provided through ioctl(2). ref: proc(4)
+
+Process Address Space
+---------------------
+
+* SVR4 incorporates a new virtual memory architecture (form SunOS) which
+  provides greater control.
+
+* A process executes in a virtual address space consisting of number of memory
+  mappings (contiguous virtual address ranges)
+
+* Associated with each mappings are:
+  > virtual address
+  > length
+  > set of flags describing permissions (rwx)
+
+* New syscalls permit a process to map objects (generally files) into and out of
+  its address space (mmap and munmap). A mapping can be private (MAP_PRIVATE) or
+  shared (MAP_SHARED).
+
+* PIOCMAP operation extracts the memory map of the process:
+  > writable mapping (data)
+  > read/exec mapping (code)
+
+* What happens if an attempt is made to store in a code portion?
+  > A process itself cannot do this (because no write permission) of course
+  > But a controlling process can write to the /proc interface
+  > This way breakpoints can be planted in code, or data modified without
+    corruption (a.out or other processes that may be executing same file)
+
+
+Process context
+---------------
+
+* The execution context of a process is described by the prstatus_t structure,
+  which is controlling process can request at any time.
+
+Events of interest
+------------------
+
+* A process executes in an environment established by and enforced by the Unix
+  kernel. Natural points of control for a process are:
+  > Where it enters and where it leaves the kernel
+  > Specifically sys call entry and syscall exit
+  > Machine faults
+  > Receipt of signals
+
+* Events of interest are specified through the /proc interface using set of
+  flags
+
+* Signals are specified using the POSIX signal set type, sigset_t
+
+* Machine faults and sys calls are specified using analogous set type flset_t
+  and sysset_t
+
+* SVR4 implementation provides up to 128 signals, 128 faults, and 512 syscalls!
+
+* There are basically two points in the kernel where signals are detected:
+  > When the process is returning to the user level
+  > When the process is sleeping at an interruptible priority within a syscall.
+  > Above cases are handled by kernel function issig()
+
+
+Breakpoints
+-----------
+
+* The /proc interface does not directly implement the concept of a process
+  breakpoint, but it provides sufficient mechanism for a debugger to do so.
+
+* Breakpoints can be installed in a process by a debugger using read and write
+  operations on the process address space to replace the machine instruction at
+  each breakpoint address with an illegal user level instruction.
+
+* Most systems designate one instruction as breakpoint instruction, but all that
+  is really needed is one that causes a trap to the kernel. On architectures
+  with variable length instructions, the length of breakpoint instruction should
+  be that of shortest instruction in the instruction set. Why?
+
+Controlling multiple processes
+------------------------------
+
+* When a controlled process creates a child process, the controlling process may
+  wish to add the child process to its set of controlled processes or can leave
+  it untouched. In either case some action needs to be taken.
+
+* Debugger sets `inherit-on-fork' flag on the child process, the child inherits
+  all the tracing flags of the parent. Debugger gets child's PID and opens the
+  /proc/pid file.
+
+
+Implementation
+--------------
+
+* The implementation of /proc as a set of `files' is facilitated by the virtual
+  filesystem architecture of SVR4 which is derived from VNODE feature of SunOS.
+
+* Within this framework the construction of the fantasy world (the illusion that
+  processes are actually files) is straightforward. syscall references to
+  /proc files result in the invocation of low level code to create and maintain
+  /proc vnodes.
+
+   For example:
+   An attempt to open /proc/2846 results in a call to `prlookup' which searches
+   the system process structures for process id 2846 and (if such a process
+   exists) constructs a VNODE for it. The upper-level code associates this VNODE
+   with the open fd, and subsequent applications of read(2), write(2), and
+   ioctl(2) result in calls to prread, prwrite, and prioctl.
+
+   Similarly `ls' on /proc results in readdir which results in a call to
+   prreaddir which reads the process table / process structures.
+
+Applications
+------------
+
+ps(1)    - Implemented using /proc
+truss(1)
+
+truss(1) slows down the monitoring process. (How does it affect the program?)
+ > Slowing a program can affect it if it uses alarm(1) or other real time
+ mechanisms.
+
+
