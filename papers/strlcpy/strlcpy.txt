@@ -1,0 +1,42 @@
+     strlcpy and strlcat -- consistent, safe, string copy and concatenation
+
+Abstract
+Introduction
+Common Misconceptions
+How do strlcpy and strlcat help things?
+Design decisions
+Performance
+What strlcat and strlcpy are not
+Who uses strlcpy and strlcat?
+What's next?
+Availability
+
+Abstract:
+
+- There have been increase in the buffer overflow attacks.
+- strncpy and strncat is not bullet proof.
+- Paper explains an alternate, intuitive, and consistent API designed with safe
+  string copy in mind.
+
+Quite a long abstract
+
+Introduction:
+
+sprintf, strcpy, strcat -- Overflow due to unbound string copies.
+
+Common Misconceptions:
+
+a. strncpy() NUL terminates the destination string.
+   - Not needed of course, if given variable is static or if it was allocated by
+     calloc()
+b. Converting code from strcpy and strcat to strncpy and strncat does not cause
+   any performance degradation.
+
+How do strlcpy and strlcat help things?
+
+- Consistent unambiguous API
+- Guarantee to NUL terminate the string
+- Does not zero fill the destination
+
+Zero filling the destination is the root cause of performance issues.
+

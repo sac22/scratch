@@ -1,0 +1,11 @@
+This paper by Todd C Miller and de Raadt explains the new implementation of
+strlcat and strlcpy
+
+Gives an overview of why the functions were implemented and its advantages over
+strncpy and strncat.
+
+Will be able to understand how to design and how not to design a function
+interface.
+Helps understand how the performance is impacted (zero filling the remaining
+bytes)
+
