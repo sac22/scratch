@@ -1,0 +1,9 @@
+                                  TCP Wrappers
+
+* A simple tool to monitor and control incoming network traffic
+* Useful for shielding off systems and cracker activity
+
+TCP Wrapper trick:
+Runs a program in place of all other programs, which will invoke the original
+program after doing some book keeping (logging).
+It is also highly configurable, providing fine grained access controls.
